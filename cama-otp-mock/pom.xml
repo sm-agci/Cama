@@ -9,7 +9,7 @@
     </parent>
     <groupId>cama</groupId>
     <artifactId>cama-otp-mock</artifactId>
-    <version>0.2.7-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>cama-otp-mock</name>
     <description>cama-otp-mock</description>
 
