@@ -1,4 +1,4 @@
-package cama.otp.mock.controller;
+package cama.api;
 
 
 import org.springframework.boot.SpringApplication;
