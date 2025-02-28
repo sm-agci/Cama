@@ -3,3 +3,5 @@
 /cama-api/.mvn/wrapper/maven-wrapper.properties
 /cama-otp-mock2.7z
 /.idea/**
+/.idea/compiler.xml
+/.idea/encodings.xml

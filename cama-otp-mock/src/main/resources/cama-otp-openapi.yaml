@@ -89,9 +89,6 @@ paths:
           $ref: '#/components/responses/Generic503'
         '504':
           $ref: '#/components/responses/Generic504'
-      security:
-        - openId:
-            - one-time-password-sms:send-validate
   /validate-code:
     post:
       tags:
@@ -141,9 +138,6 @@ paths:
           $ref: '#/components/responses/Generic503'
         '504':
           $ref: '#/components/responses/Generic504'
-      security:
-        - openId:
-            - one-time-password-sms:send-validate
 components:
   schemas:
     SendCodeBody:
@@ -214,10 +208,6 @@ components:
         message:
           type: string
           description: Detailed error description
-  securitySchemes:
-    openId:
-      type: openIdConnect
-      openIdConnectUrl: https://example.com/.well-known/openid-configuration
   responses:
     Generic400:
       description: Problem with the client request

@@ -25,8 +25,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler({StorageException.class})
     protected ResponseEntity<ErrorInfo> handleGenericException(StorageException ex) {
         log.error("Unable to process request: {}", ex);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorInfo(500, "INTERNAL", " Server error"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorInfo(500, "INTERNAL", "Server error"));
     }
 
     @ExceptionHandler({Exception.class})
