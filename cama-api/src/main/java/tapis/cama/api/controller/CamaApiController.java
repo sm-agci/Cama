@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CamaApiController implements cama.api.generate.controller.CamaApiApi {
 
 
-    //hadcode message dla OTP
+    //hardcode message dla OTP
     //send xcorrealtor etc
     //
 }
