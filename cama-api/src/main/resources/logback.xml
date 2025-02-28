@@ -2,7 +2,7 @@
     <property resource="application.properties" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{uniqueId}] - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%X{uniqueId}] [%thread] %-5level %logger{36} [%X{uniqueId}] - %msg%n</pattern>
         </encoder>
     </appender>
 

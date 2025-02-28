@@ -72,7 +72,6 @@ components:
           example: '{{code}} is your short code to authenticate with Cool App via SMS'
       required:
         - phoneNumber
-        - message
       additionalProperties: false
     SendCodeResponse:
       type: "object"
