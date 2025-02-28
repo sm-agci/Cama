@@ -4,6 +4,8 @@ services:
     container_name: cama-otp-mock
     ports:
       - '8082:8082'
+    expose:
+      - 8082
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - API_TOKEN=QxY7p1Bz3l-A2tCfG0VJW3Tk
@@ -14,11 +16,13 @@ services:
       - ./data/mock:/data
 
   cama-api:
-    image: cama-otp:latest
-    container_name: cama-otp
+    image: cama-api:latest
+    container_name: cama-api
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - CAMA_OTP_MOCK_API_TOKEN=QxY7p1Bz3l-A2tCfG0VJW3Tk
+      - WEBCLIENT_HOST=cama-otp-mock
+      - WEBCLIENT_PORT=8082
     restart: unless-stopped
     ports:
       - '8080:8080'

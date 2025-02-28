@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -21,7 +22,7 @@ public class CamaOtpMockWebClient {
     private final WebClientProperties webClientProperties;
     public <T, V> T post(String path, String token, V body, String xCorrelator, Class<T> clazz) {
         log.info("POST: Connecting to external service, with request body: {}, xCorrelator: {}", body, xCorrelator);
-        WebClient webClient = webClientBuilder.build();
+        WebClient webClient = webClientBuilder.filter(logRequest()).build();
         T response = webClient.post()
                 .uri(uriBuilder -> uriBuilder.scheme(DEFAULT_PROTOCOL)
                         .host(webClientProperties.getHost())
@@ -63,5 +64,13 @@ public class CamaOtpMockWebClient {
         HttpStatusCode statusCode = clientResponse.statusCode();
         log.warn("Detected client error response with status: {}", statusCode);
         return clientResponse.createException();
+    }
+
+    private static ExchangeFilterFunction logRequest() {
+        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
+            log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
+            clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
+            return Mono.just(clientRequest);
+        });
     }
 }
