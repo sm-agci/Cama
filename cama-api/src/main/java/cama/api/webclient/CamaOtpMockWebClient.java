@@ -20,7 +20,7 @@ public class CamaOtpMockWebClient {
     private final WebClient.Builder webClientBuilder;
     private final WebClientProperties webClientProperties;
     public <T, V> T post(String path, String token, V body, String xCorrelator, Class<T> clazz) {
-        log.info("POST: Connecting to external service, with request body: {}", body);
+        log.info("POST: Connecting to external service, with request body: {}, xCorrelator: {}", body, xCorrelator);
         WebClient webClient = webClientBuilder.build();
         T response = webClient.post()
                 .uri(uriBuilder -> uriBuilder.scheme(DEFAULT_PROTOCOL)
