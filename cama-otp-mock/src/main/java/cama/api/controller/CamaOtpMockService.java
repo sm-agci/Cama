@@ -1,0 +1,45 @@
+package cama.api.controller;
+
+import cama.otp.mock.generate.dto.SendCodeBody;
+import cama.otp.mock.generate.dto.ValidateCodeBody;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import cama.otp.mock.codes.CodesStorage;
+import cama.otp.mock.exceptions.InvalidOtpCodeException;
+
+import java.security.SecureRandom;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class CamaOtpMockService {
+
+    private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    private final SecureRandom rnd = new SecureRandom();
+    private final CodesStorage storage;
+
+    String sendCode(SendCodeBody otpMessage, String xCorrelator) {
+        String code = generateOtpCode();
+        storage.sendCode(otpMessage.getPhoneNumber(), code, xCorrelator);
+        log.debug("[sendCode] generatedCode = {}, message= {}, x-correlator: {}", code, otpMessage, xCorrelator);
+        return code;
+    }
+
+    void validateCode(ValidateCodeBody otpValidateCode, String xCorrelator) {
+        log.debug("[validateCode] generatedCode = {}, x-correlator: {}", otpValidateCode, xCorrelator);
+        boolean isValid = storage.validateCode(otpValidateCode.getCode(), otpValidateCode.getAuthenticationId());
+        if (!isValid) {
+            throw new InvalidOtpCodeException();
+        }
+    }
+
+    private String generateOtpCode() {
+        StringBuilder code = new StringBuilder();
+        while (code.length() < 4) {
+            int index = rnd.nextInt(1, CHARS.length());
+            code.append(CHARS.charAt(index));
+        }
+        return code.toString();
+    }
+}
