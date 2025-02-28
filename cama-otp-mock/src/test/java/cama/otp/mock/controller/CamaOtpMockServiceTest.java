@@ -1,4 +1,4 @@
-package cama.api.controller;
+package cama.otp.mock.controller;
 
 class CamaOtpMockServiceTest {
 

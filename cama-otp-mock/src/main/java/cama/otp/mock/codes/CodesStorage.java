@@ -1,9 +1,9 @@
 package cama.otp.mock.codes;
 
+import cama.otp.mock.exceptions.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import tapis.otp.mock.exceptions.StorageException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,5 +1,8 @@
-package cama.api.controller;
+package cama.otp.mock.controller;
 
+import cama.otp.mock.exceptions.BadCredentialsException;
+import cama.otp.mock.exceptions.InvalidOtpCodeException;
+import cama.otp.mock.exceptions.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,9 +10,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import cama.otp.mock.generate.dto.ErrorInfo;
-import tapis.otp.mock.exceptions.BadCredentialsException;
-import tapis.otp.mock.exceptions.InvalidOtpCodeException;
-import tapis.otp.mock.exceptions.StorageException;
 
 @Slf4j
 @ControllerAdvice

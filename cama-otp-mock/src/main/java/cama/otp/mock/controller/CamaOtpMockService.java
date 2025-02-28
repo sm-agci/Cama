@@ -1,4 +1,4 @@
-package cama.api.controller;
+package cama.otp.mock.controller;
 
 import cama.otp.mock.generate.dto.SendCodeBody;
 import cama.otp.mock.generate.dto.ValidateCodeBody;

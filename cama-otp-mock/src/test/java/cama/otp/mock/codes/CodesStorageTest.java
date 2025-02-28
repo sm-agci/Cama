@@ -1,4 +1,4 @@
-package tapis.otp.mock.codes;
+package cama.otp.mock.codes;
 
 class CodesStorageTest {
 

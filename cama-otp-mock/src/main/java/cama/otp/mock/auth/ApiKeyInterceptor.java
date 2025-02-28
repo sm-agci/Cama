@@ -1,11 +1,11 @@
 package cama.otp.mock.auth;
 
+import cama.otp.mock.exceptions.BadCredentialsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import tapis.otp.mock.exceptions.BadCredentialsException;
 
 @Component
 public class ApiKeyInterceptor implements HandlerInterceptor {
