@@ -1,0 +1,111 @@
+openapi: "3.0.3"
+info:
+  title: "Cama API"
+  description: "Cama"
+  version: "1.0.0"
+servers:
+  - url: "https://gmlc_facade"
+paths:
+  /api/v1/cama/otp/send-code:
+    post:
+      summary: "Send code to phone number using OTP mock"
+      operationId: "sendCode"
+      tags:
+        - Cama API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendCodeBody"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/SendCodeResponse"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+  /api/v1/cama/otp/validate-code:
+    post:
+      summary: "Validate code that was send to phone number using OTP mock"
+      operationId: "validateCode"
+      tags:
+        - Cama API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateCodeBody"
+      responses:
+        "204":
+          description: "The OTP was successfully validated"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Void"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+components:
+  schemas:
+    SendCodeBody:
+      type: "object"
+      properties:
+        phoneNumber:
+          type: "string"
+          pattern: '^\+?[0-9]{5,15}$'
+          minLength: 5
+          maxLength: 15
+          example: '+346661113334'
+        message:
+          type: "string"
+          pattern: .*\{\{code\}\}.*
+          maxLength: 160
+          example: '{{code}} is your short code to authenticate with Cool App via SMS'
+      required:
+        - phoneNumber
+        - message
+      additionalProperties: false
+    SendCodeResponse:
+      type: "object"
+      properties:
+        authenticationId:
+          $ref: '#/components/schemas/AuthenticationId'
+      required:
+        - authenticationId
+      additionalProperties: false
+    AuthenticationId:
+      type: string
+      pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      minLength: 36
+      maxLength: 36
+      description: unique id of the verification attempt the code belongs to.
+      example: ea0840f3-3663-4149-bd10-c7c6b8912105
+    ValidateCodeBody:
+      type: "object"
+      properties:
+        authenticationId:
+          $ref: '#/components/schemas/AuthenticationId'
+        code:
+          type: string
+          description: temporal, short code to be validated
+          maxLength: 10
+          minLength: 1
+          pattern: "^[A-Z0-9]*$"
+          example: AJY3
+      required:
+        - authenticationId
+        - code
+      additionalProperties: false
+    Void:
+      type: "object"
+      properties: { }
+      additionalProperties: false

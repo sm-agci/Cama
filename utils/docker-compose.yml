@@ -1,0 +1,34 @@
+services:
+  cama-otp-mock:
+    image: cama-otp-mock:latest
+    container_name: cama-otp-mock
+    ports:
+      - '8082:8082'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - API_TOKEN=QxY7p1Bz3l-A2tCfG0VJW3Tk
+    restart: unless-stopped
+    networks:
+      - cama-network
+    volumes:
+      - ./data/mock:/data
+
+  cama-api:
+    image: cama-otp:latest
+    container_name: cama-otp
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CAMA_OTP_MOCK_API_TOKEN=QxY7p1Bz3l-A2tCfG0VJW3Tk
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    networks:
+      - cama-network
+    depends_on:
+      - cama-otp-mock
+    volumes:
+      - ./data/api:/data
+
+networks:
+  cama-network:
+    driver: bridge

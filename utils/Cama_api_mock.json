@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "a1ecc2c2-6c45-4c94-afb9-ef64c4ada155",
+		"name": "CAMA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25638552"
+	},
+	"item": [
+		{
+			"name": "MOCK-send-code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phoneNumber\" : \"+48123456789\",\r\n    \"message\" : \"{{code}} is your short code to authenticate with Cool App via SMS\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/send-code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"send-code"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MOCK-validate-code",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "test-token",
+						"type": "text"
+					},
+					{
+						"key": "x-correlator",
+						"value": "cfb2f91a-f946-4141-94c2-82a33bb2f198",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authenticationId\" : \"ea0840f3-3663-4149-bd10-c7c6b8912105\",\r\n    \"code\" : \"V95E\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/validate-code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"validate-code"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

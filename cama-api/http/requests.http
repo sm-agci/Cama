@@ -1,0 +1,10 @@
+### POST send code
+POST http://localhost:8080/xxx
+Accept: text/plain
+Content-Type: application/json
+X-API-KEY: test-token
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f198
+{
+    "phoneNumber" : "+48123456789",
+    xx
+}
