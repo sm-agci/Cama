@@ -1,5 +1,6 @@
 package cama.api.controller;
 
+import cama.api.exceptions.BadCredentialsException;
 import cama.api.generate.dto.ErrorInfo;
 import ch.qos.logback.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 @ControllerAdvice
 class GlobalExceptionHandler {
 
+    @ExceptionHandler({BadCredentialsException.class})
+    protected ResponseEntity<ErrorInfo> handleBadCredentialsException(BadCredentialsException ex) {
+        log.error("Unable to authenticate: {}", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorInfo(401, "UNAUTHENTICATED", "Request not authenticated due to missing, invalid, or expired credentials"));
+    }
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ErrorInfo> handleException(WebClientResponseException ex) {
         log.error("Unable to get CAMA OTP MOCK response, {}", ex.getMessage());
