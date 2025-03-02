@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/cama-be/cama-be.iml" filepath="$PROJECT_DIR$/cama-be/cama-be.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cama-mobile/cama-mobile.iml" filepath="$PROJECT_DIR$/cama-mobile/cama-mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/cama-otp-mock/cama-otp-mock.iml" filepath="$PROJECT_DIR$/cama-otp-mock/cama-otp-mock.iml" />
-      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
-      <module fileurl="file://$PROJECT_DIR$/utils/utils.iml" filepath="$PROJECT_DIR$/utils/utils.iml" />
     </modules>
   </component>
 </project>

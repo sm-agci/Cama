@@ -2,8 +2,10 @@ package cama.otp.mock.controller;
 
 import cama.otp.mock.generate.dto.SendCodeBody;
 import cama.otp.mock.generate.dto.ValidateCodeBody;
+import ch.qos.logback.core.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import cama.otp.mock.codes.CodesStorage;
 import cama.otp.mock.exceptions.InvalidOtpCodeException;
@@ -16,6 +18,8 @@ import java.security.SecureRandom;
 public class CamaOtpMockService {
 
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    @Value("${api.valid.code}")
+    private String validCode;
     private final SecureRandom rnd = new SecureRandom();
     private final CodesStorage storage;
 
@@ -28,7 +32,9 @@ public class CamaOtpMockService {
 
     void validateCode(ValidateCodeBody otpValidateCode, String xCorrelator) {
         log.debug("[validateCode] generatedCode = {}, x-correlator: {}", otpValidateCode, xCorrelator);
-        boolean isValid = storage.validateCode(otpValidateCode.getCode(), otpValidateCode.getAuthenticationId());
+        boolean isValid =!StringUtil.isNullOrEmpty(validCode) && validCode.equals(otpValidateCode.getCode()) ?
+                true:
+                storage.validateCode(otpValidateCode.getCode(), otpValidateCode.getAuthenticationId());
         if (!isValid) {
             throw new InvalidOtpCodeException();
         }

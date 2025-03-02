@@ -8,7 +8,5 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cama-otp-mock" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cama-otp-mock2" vcs="Git" />
   </component>
 </project>

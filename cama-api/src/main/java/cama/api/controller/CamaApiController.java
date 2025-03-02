@@ -17,14 +17,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CamaApiController implements CamaApiApi {
 
-    private final CamaApiService camaApiService;
+    private final CamaApiOtpService camaApiOtpService;
+    private final CamaApiFencingService camaApiFencingService;
 
     @Override
     public ResponseEntity<SendCodeResponse> sendCode(SendCodeBody otpMessage) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
         log.debug("[sendCode] otpMessage = {}, x-correlator: {}", otpMessage, xCorrelator);
-        SendCodeResponse response = camaApiService.sendCode(otpMessage, xCorrelator);
+        SendCodeResponse response = camaApiOtpService.sendCode(otpMessage, xCorrelator);
         MDC.clear();
         return ResponseEntity.ok()
                 .body(response);
@@ -35,7 +36,7 @@ public class CamaApiController implements CamaApiApi {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
         log.debug("[validateCode] otpValidateCode = {}, x-correlator: {}", otpValidateCode, xCorrelator);
-        camaApiService.validateCode(otpValidateCode, xCorrelator);
+        camaApiOtpService.validateCode(otpValidateCode, xCorrelator);
         MDC.clear();
         return ResponseEntity.noContent().build();
     }

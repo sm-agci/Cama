@@ -140,6 +140,18 @@
                             </configOptions>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>swagger-generate-fencing-api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/cama-geofencing-openapi.yaml</inputSpec>
+                            <configOptions>
+                                <interfaceName>CamaApiGeofencing</interfaceName>
+                            </configOptions>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

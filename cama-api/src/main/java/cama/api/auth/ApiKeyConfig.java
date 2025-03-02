@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ApiKeyConfig implements WebMvcConfigurer {
 
     @Autowired
-    private cama.otp.mock.auth.ApiKeyInterceptor apiKeyInterceptor;
+    private ApiKeyInterceptor apiKeyInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

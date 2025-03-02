@@ -54,17 +54,128 @@ paths:
           description: "Unauthorized"
         "500":
           description: "Internal Server Error"
+  /api/v1/cama/tasks:
+    post:
+      summary: "Create cama task"
+      operationId: "create task"
+      tags:
+        - Cama API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+    get:
+      summary: "Get cama tasks list"
+      operationId: "get tasks"
+      tags:
+        - Cama API
+      responses:
+        "200":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  $ref: "#/components/schemas/TaskResponse"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+  /api/v1/cama/tasks/{id}:
+    get:
+      summary: "Get cama task details"
+      operationId: "get task"
+      tags:
+        - Cama API
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+    delete:
+      summary: "Get cama task details"
+      operationId: "delete task"
+      tags:
+        - Cama API
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: "Task deleted"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
+  /api/v1/cama/tasks/upload:
+    post:
+      summary: "Create cama task from audio"
+      operationId: "create task from file"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "400":
+          description: "Bad Request"
+        "401":
+          description: "Unauthorized"
+        "500":
+          description: "Internal Server Error"
 components:
   schemas:
+    PhoneNumber:
+      type: "string"
+      pattern: '^\+?[0-9]{5,15}$'
+      minLength: 5
+      maxLength: 15
+      example: '+346661113334'
     SendCodeBody:
       type: "object"
       properties:
         phoneNumber:
-          type: "string"
-          pattern: '^\+?[0-9]{5,15}$'
-          minLength: 5
-          maxLength: 15
-          example: '+346661113334'
+          $ref: '#/components/schemas/PhoneNumber'
         message:
           type: "string"
           pattern: .*\{\{code\}\}.*
@@ -125,3 +236,42 @@ components:
         message:
           type: string
           description: Detailed error description
+    Task:
+      type: "object"
+      properties:
+        command:
+          type: string
+          description: temporal, short code to be validated
+          maxLength: 1000
+          minLength: 1
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+      required:
+        - command
+      additionalProperties: false
+    TaskResponse:
+      type: "object"
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        command:
+          type: string
+          description: temporal, short code to be validated
+          maxLength: 1000
+          minLength: 1
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+      required:
+        - command
+      additionalProperties: false
+    Id:
+      type: string
+      description: Id
+  parameters:
+    Id:
+      name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        $ref: "#/components/schemas/Id"
