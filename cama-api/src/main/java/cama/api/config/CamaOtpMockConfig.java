@@ -12,6 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "otp.mock")
 @ToString
 public class CamaOtpMockConfig {
-    private String codeStorageFile;
+    private String codesStorageFile;
     private String validCode;
 }

@@ -20,7 +20,7 @@ services:
     container_name: cama-api
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - CAMA_OTP_WEBCLIENT_API_KEY=QxY7p1Bz3l-A2tCfG0VJW3Tk
+      - OTP_WEBCLIENT_API_KEY=QxY7p1Bz3l-A2tCfG0VJW3Tk
       - API_TOKEN=GkZyQ8WpMTNXr4v1C3LA6YdF
       - OTP_WEBCLIENT_HOST=cama-otp-service
       - OTP_WEBCLIENT_PORT=8082

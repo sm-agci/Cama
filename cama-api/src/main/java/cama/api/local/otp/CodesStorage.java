@@ -22,7 +22,7 @@ public class CodesStorage {
     private static final String COMMA_DELIMITER = ",";
 
     public void sendCode(String phoneNumber, String code, String xCorrelator) {
-        try (FileOutputStream fos = new FileOutputStream(camaOtpMockConfig.getCodeStorageFile(), true)) {
+        try (FileOutputStream fos = new FileOutputStream(camaOtpMockConfig.getCodesStorageFile(), true)) {
             String line = formatLine(phoneNumber, code, xCorrelator);
             fos.write(line.getBytes());
         } catch (IOException e) {
@@ -39,7 +39,7 @@ public class CodesStorage {
 
     private List<OtpCode> getCodes() {
         try {
-            List<OtpCode> records = Files.readAllLines(Paths.get(camaOtpMockConfig.getCodeStorageFile()))
+            List<OtpCode> records = Files.readAllLines(Paths.get(camaOtpMockConfig.getCodesStorageFile()))
                     .stream()
                     .map(line -> new OtpCode(line.split(COMMA_DELIMITER)))
                     .toList();

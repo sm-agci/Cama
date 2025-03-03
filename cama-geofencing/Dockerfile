@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21
+FROM eclipse-temurin:17
 ENV TZ=Europe/Warsaw
 RUN groupadd -g 1001 dockergr && useradd -m -u 1001 -g dockergr dockerusr
 USER dockerusr

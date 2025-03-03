@@ -15,5 +15,5 @@ public class OplWebClientProperties {
 
     private String host;
     private int port;
-    private String autHeader;
+    private String authHeader;
 }

@@ -1,5 +1,6 @@
 package cama.api.controller;
 
+import cama.api.config.CamaOtpConfig;
 import cama.api.config.CamaOtpMockConfig;
 import cama.api.config.CamaOtpServiceConfig;
 import cama.api.generate.dto.SendCodeBody;
@@ -10,6 +11,7 @@ import cama.api.webclient.CamaOtpWebClient;
 import ch.qos.logback.core.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -17,16 +19,16 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 class CamaApiOtpService {
 
-    private final CamaOtpMockConfig camaOtpMockConfig;
     private final CamaOtpServiceConfig camaOtpServiceConfig;
     private final CamaOtpWebClient webClient;
     private final CamaOtpLocalMockService localMockService;
+    private final CamaOtpConfig otpConfig;
 
     SendCodeResponse sendCode(SendCodeBody otpMessage, String xCorrelator) {
         if (StringUtil.isNullOrEmpty(otpMessage.getMessage())) {
             otpMessage.setMessage(camaOtpServiceConfig.getSendCodeMessage());
         }
-        if (camaOtpServiceConfig.isUseExternalService()) {
+        if (otpConfig.isUseExternalService()) {
             return webClient.post(camaOtpServiceConfig.getSendCodeUrl(),
                     otpMessage, xCorrelator, SendCodeResponse.class);
         } else {
@@ -36,7 +38,7 @@ class CamaApiOtpService {
     }
 
     void validateCode(ValidateCodeBody otpValidateCode, String xCorrelator) {
-        if (camaOtpServiceConfig.isUseExternalService()) {
+        if (otpConfig.isUseExternalService()) {
             webClient.post(camaOtpServiceConfig.getValidateCodeUrl(),
                     otpValidateCode, xCorrelator, Void.class);
         } else {

@@ -9,10 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @AllArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "otp.service.api")
+@ConfigurationProperties(prefix = "otp")
 @ToString
-public class CamaOtpServiceConfig {
-    private String sendCodeUrl;
-    private String validateCodeUrl;
-    private String sendCodeMessage;
+public class CamaOtpConfig {
+    private boolean useExternalService;
 }
