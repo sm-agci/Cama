@@ -11,6 +11,13 @@ class OtpCode {
     private final String code;
     @Getter
     private final String xCorrelator;
+
+    public OtpCode(String number, String code, String uuid) {
+        this.phoneNumber = number;
+        this.code = code;
+        this.xCorrelator = uuid;
+    }
+
     public OtpCode(String[] csvLineArgs) {
         this.phoneNumber = csvLineArgs[0];
         this.code = csvLineArgs[1];

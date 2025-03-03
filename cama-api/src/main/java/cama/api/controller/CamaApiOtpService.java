@@ -32,8 +32,8 @@ class CamaApiOtpService {
             return webClient.post(camaOtpServiceConfig.getSendCodeUrl(),
                     otpMessage, xCorrelator, SendCodeResponse.class);
         } else {
-            String authId = localMockService.sendCode(otpMessage, xCorrelator);
-            return new SendCodeResponse(authId);
+            String code = localMockService.sendCode(otpMessage, xCorrelator);
+            return new SendCodeResponse(String.format("%s|%s",code, xCorrelator));
         }
     }
 

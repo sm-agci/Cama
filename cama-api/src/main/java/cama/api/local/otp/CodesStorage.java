@@ -18,40 +18,23 @@ import java.util.List;
 public class CodesStorage {
 
     private final CamaOtpMockConfig camaOtpMockConfig;
-
-    private static final String COMMA_DELIMITER = ",";
+    private final FileCodesStorage fileCodesStorage;
+    private final MemoryCodesStorage memoryCodesStorage;
 
     public void sendCode(String phoneNumber, String code, String xCorrelator) {
-        try (FileOutputStream fos = new FileOutputStream(camaOtpMockConfig.getCodesStorageFile(), true)) {
-            String line = formatLine(phoneNumber, code, xCorrelator);
-            fos.write(line.getBytes());
-        } catch (IOException e) {
-            log.error("Unable to add to storage: {}", e);
-            throw new StorageException();
+        if (camaOtpMockConfig.getSource().equalsIgnoreCase("FILE")) {
+            fileCodesStorage.sendCode(phoneNumber, code, xCorrelator);
+        } else {
+            memoryCodesStorage.sendCode(phoneNumber, code, xCorrelator);
         }
     }
 
     public boolean validateCode(String code, String authenticationId) {
-        List<OtpCode> codes = getCodes();
-        return codes.stream()
-                .anyMatch(x -> x.getCode().equals(code) && x.getXCorrelator().equals(authenticationId));
-    }
-
-    private List<OtpCode> getCodes() {
-        try {
-            List<OtpCode> records = Files.readAllLines(Paths.get(camaOtpMockConfig.getCodesStorageFile()))
-                    .stream()
-                    .map(line -> new OtpCode(line.split(COMMA_DELIMITER)))
-                    .toList();
-            log.debug("Read codes: {}", records);
-            return records;
-        } catch (IOException e) {
-            log.error("Unable to access storage: {}", e);
-            throw new StorageException();
+        if (camaOtpMockConfig.getSource().equalsIgnoreCase("FILE")) {
+           return fileCodesStorage.validateCode(code, authenticationId);
+        } else {
+           return memoryCodesStorage.validateCode(code, authenticationId);
         }
     }
 
-    private static String formatLine(String phoneNumber, String code, String xCorrelator) {
-        return String.format("%s,%s,%s\n", phoneNumber, code, xCorrelator);
-    }
 }

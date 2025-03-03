@@ -1,0 +1,20 @@
+### POST send code
+POST https://cama-api.onrender.com/api/v1/cama/otp/send-code
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
+
+{
+    "phoneNumber" : "+48123456789"
+}
+
+### POST validate code
+POST https://cama-api.onrender.com/api/v1/cama/otp/validate-code
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
+
+{
+    "authenticationId" : "99fea2c0-f5bc-4730-8cb5-3f24d21e8f5f",
+    "code" : "V95E"
+}
