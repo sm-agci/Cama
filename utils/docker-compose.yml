@@ -20,10 +20,12 @@ services:
     container_name: cama-api
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - CAMA_OTP_SERVICE_API_TOKEN=QxY7p1Bz3l-A2tCfG0VJW3Tk
+      - CAMA_OTP_WEBCLIENT_API_KEY=QxY7p1Bz3l-A2tCfG0VJW3Tk
       - API_TOKEN=GkZyQ8WpMTNXr4v1C3LA6YdF
-      - WEBCLIENT_HOST=cama-otp-service
-      - WEBCLIENT_PORT=8082
+      - OTP_WEBCLIENT_HOST=cama-otp-service
+      - OTP_WEBCLIENT_PORT=8082
+      - OTP_MOCK_VALID_CODE=V95E
+      - OTP_MOCK_CODES_STORAGE_FILE=/data/codes.csv
     restart: unless-stopped
     ports:
       - '8080:8080'

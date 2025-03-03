@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Configuration;
 @NoArgsConstructor
 @AllArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "otp.mock")
+@ConfigurationProperties(prefix = "cama.otp.service.api")
 @ToString
-public class CamaOtpMockConfig {
-    private String codeStorageFile;
-    private String validCode;
+public class CamaOtpServiceConfig {
+    private String sendCodeUrl;
+    private String validateCodeUrl;
+    private String sendCodeMessage;
+    private boolean useExternalService;
 }

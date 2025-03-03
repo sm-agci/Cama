@@ -1,5 +1,6 @@
 package cama.api.local.otp;
 
+import cama.api.config.CamaOtpMockConfig;
 import cama.api.generate.dto.SendCodeBody;
 import cama.api.generate.dto.ValidateCodeBody;
 import ch.qos.logback.core.util.StringUtil;
@@ -16,8 +17,7 @@ import java.security.SecureRandom;
 public class CamaOtpLocalMockService {
 
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-    @Value("${api.valid.code}")
-    private String validCode;
+    private final CamaOtpMockConfig mockConfig;
     private final SecureRandom rnd = new SecureRandom();
     private final CodesStorage storage;
 
@@ -30,7 +30,7 @@ public class CamaOtpLocalMockService {
 
     public void validateCode(ValidateCodeBody otpValidateCode, String xCorrelator) {
         log.debug("[validateCode] generatedCode = {}, x-correlator: {}", otpValidateCode, xCorrelator);
-        boolean isValid =!StringUtil.isNullOrEmpty(validCode) && validCode.equals(otpValidateCode.getCode()) ?
+        boolean isValid =!StringUtil.isNullOrEmpty(mockConfig.getValidCode()) && mockConfig.getValidCode().equals(otpValidateCode.getCode()) ?
                 true:
                 storage.validateCode(otpValidateCode.getCode(), otpValidateCode.getAuthenticationId());
         if (!isValid) {

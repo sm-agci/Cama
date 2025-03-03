@@ -1,5 +1,7 @@
 package cama.api.local.otp;
 
+import cama.api.config.CamaOtpMockConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,16 +12,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-@Component
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class CodesStorage {
-    @Value("${otp.codes.storage.file}")
-    private String storageFile;
+
+    private final CamaOtpMockConfig camaOtpMockConfig;
 
     private static final String COMMA_DELIMITER = ",";
 
     public void sendCode(String phoneNumber, String code, String xCorrelator) {
-        try (FileOutputStream fos = new FileOutputStream(storageFile, true)) {
+        try (FileOutputStream fos = new FileOutputStream(camaOtpMockConfig.getCodeStorageFile(), true)) {
             String line = formatLine(phoneNumber, code, xCorrelator);
             fos.write(line.getBytes());
         } catch (IOException e) {
@@ -36,7 +39,7 @@ public class CodesStorage {
 
     private List<OtpCode> getCodes() {
         try {
-            List<OtpCode> records = Files.readAllLines(Paths.get(storageFile))
+            List<OtpCode> records = Files.readAllLines(Paths.get(camaOtpMockConfig.getCodeStorageFile()))
                     .stream()
                     .map(line -> new OtpCode(line.split(COMMA_DELIMITER)))
                     .toList();
