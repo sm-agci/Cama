@@ -1,6 +1,7 @@
 package cama.api.auth;
 
 import cama.api.exceptions.BadCredentialsException;
+import ch.qos.logback.core.util.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,10 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String apiKey = request.getHeader(API_KEY_HEADER);
 
-        if (apiKey == null || !apiKey.trim().equals(authToken)) {
+        if (StringUtil.isNullOrEmpty(apiKey)) {
+            return true;
+        }
+        if (!apiKey.trim().equals(authToken)) {
             throw new BadCredentialsException("Invalid API Key");
         }
 
