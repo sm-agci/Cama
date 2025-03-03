@@ -11,7 +11,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class OplSandboxGeofencingClinet extends WebClientBase{
+public class OplSandboxGeofencingClient extends WebClientBase{
     private static final String AUTHORIZATION = "Authorization";
 
     private final WebClient.Builder webClientBuilder;
