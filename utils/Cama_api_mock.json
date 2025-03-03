@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "MOCK-send-code",
+			"name": "send-code",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -35,7 +35,7 @@
 			"response": []
 		},
 		{
-			"name": "MOCK-validate-code",
+			"name": "validate-code",
 			"request": {
 				"method": "POST",
 				"header": [

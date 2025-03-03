@@ -16,4 +16,5 @@ public class CamaOtpMockConfig {
     private String validateCodeUrl;
     private String token;
     private String sendCodeMessage;
+    private boolean useExternalService;
 }

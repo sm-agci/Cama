@@ -4,8 +4,8 @@
     <file url="file://$PROJECT_DIR$/cama-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cama-api/target/generated-sources/openapi/src/main/generated_api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cama-geofencing/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/cama-otp-mock/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/cama-otp-mock/target/generated-sources/openapi/src/main/generated_api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cama-otp-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cama-otp-service/target/generated-sources/openapi/src/main/generated_api" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

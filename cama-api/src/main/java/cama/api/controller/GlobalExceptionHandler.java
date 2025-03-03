@@ -2,12 +2,15 @@ package cama.api.controller;
 
 import cama.api.exceptions.BadCredentialsException;
 import cama.api.generate.dto.ErrorInfo;
+import cama.api.local.otp.InvalidOtpCodeException;
+import cama.api.local.otp.StorageException;
 import ch.qos.logback.core.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Slf4j
@@ -31,5 +34,20 @@ class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorInfo(500, "INTERNAL", ex.getMessage()));
         }
+    }
+
+    @ExceptionHandler({StorageException.class})
+    protected ResponseEntity<ErrorInfo> handleGenericException(StorageException ex) {
+        log.error("Unable to process request: {}", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorInfo(500, "INTERNAL", "Server error"));
+    }
+
+    @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ResponseEntity<ErrorInfo> handleException(InvalidOtpCodeException ex) {
+        log.error("Unable to validate code: {}", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorInfo(400, "ONE_TIME_PASSWORD_SMS.INVALID_OTP", "The provided OTP is not valid for this authenticationId"));
     }
 }

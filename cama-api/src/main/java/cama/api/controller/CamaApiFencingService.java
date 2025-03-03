@@ -4,7 +4,7 @@ import cama.api.config.CamaOtpMockConfig;
 import cama.api.generate.dto.SendCodeBody;
 import cama.api.generate.dto.SendCodeResponse;
 import cama.api.generate.dto.ValidateCodeBody;
-import cama.api.webclient.CamaOtpMockWebClient;
+import cama.api.webclient.CamaOtpWebClient;
 import ch.qos.logback.core.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 class CamaApiFencingService {
 
     private final CamaOtpMockConfig camaOtpMockConfig;
-    private final CamaOtpMockWebClient webClient;
+    private final CamaOtpWebClient webClient;
 
     SendCodeResponse sendCode(SendCodeBody otpMessage, String xCorrelator) {
         if (StringUtil.isNullOrEmpty(otpMessage.getMessage())) {
