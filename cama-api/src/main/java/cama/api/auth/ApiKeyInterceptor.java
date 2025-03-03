@@ -18,7 +18,7 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String apiKey = request.getHeader(API_KEY_HEADER);
 
-        if (apiKey == null || !apiKey.equals(authToken)) {
+        if (apiKey == null || !apiKey.trim().equals(authToken)) {
             throw new BadCredentialsException("Invalid API Key");
         }
 
