@@ -22,7 +22,7 @@ abstract class WebClientBase {
         log.info("POST: Connecting to external service, with request body: {}", body);
         WebClient webClient = builder.filter(logRequest()).build();
         WebClient.RequestBodySpec spec = webClient.post()
-                .uri(uriBuilder -> uriBuilder.scheme(DEFAULT_PROTOCOL)
+                .uri(uriBuilder -> uriBuilder.scheme(getProtocol())
                         .host(host)
                         .port(port)
                         .path(path)
@@ -35,6 +35,10 @@ abstract class WebClientBase {
                 .block();
         log.info("External service response: {}", response);
         return response;
+    }
+
+    protected String getProtocol() {
+        return DEFAULT_PROTOCOL;
     }
 
     private Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {

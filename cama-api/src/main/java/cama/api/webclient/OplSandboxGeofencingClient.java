@@ -13,6 +13,7 @@ import java.util.Map;
 @Component
 public class OplSandboxGeofencingClient extends WebClientBase{
     private static final String AUTHORIZATION = "Authorization";
+    private static final String PROTOCOL = "https";
 
     private final WebClient.Builder webClientBuilder;
     private final OplWebClientProperties webClientProperties;
@@ -24,5 +25,10 @@ public class OplSandboxGeofencingClient extends WebClientBase{
         headers.put(X_CORRELATOR_HEADER_NAME, xCorrelator);
         return post(webClientBuilder, webClientProperties.getHost(), webClientProperties.getPort(),
                 path, headers, body, clazz);
+    }
+
+    @Override
+    protected String getProtocol() {
+        return PROTOCOL;
     }
 }

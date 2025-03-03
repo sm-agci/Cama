@@ -85,7 +85,7 @@ paths:
         - Cama API
       responses:
         "200":
-          description: "Created"
+          description: "OK"
           content:
             application/json:
               schema:
@@ -109,7 +109,7 @@ paths:
         - $ref: "#/components/parameters/Id"
       responses:
         "200":
-          description: "Created"
+          description: "OK"
           content:
             application/json:
               schema:
@@ -181,13 +181,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                $ref: "#/components/schemas/TaskResponse"
         "400":
           description: "Bad Request"
         "401":
           description: "Unauthorized"
         "500":
           description: "Internal Server Error"
+  /api/v1/cama/notifications/retrieve:
+    post:
+      tags:
+        - Location notification
+      summary: "api/v1/cama/notification/retrieve"
+      operationId: "retrieveNotifications"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocationNotification"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /api/v1/cama/notifications/{phoneNumber}/{age}:
+    get:
+      tags:
+        - Location notification
+      summary: "api/v1/cama/notifications"
+      operationId: "getNotifications"
+      parameters:
+        - $ref: "#/components/parameters/PhoneNumber"
+        - $ref: "#/components/parameters/Age"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                minItems: 0
+                items:
+                  $ref: "#/components/schemas/NotificationResponse"
 components:
   schemas:
     PhoneNumber:
@@ -292,6 +326,79 @@ components:
     Id:
       type: string
       description: Id
+    Notification:
+      type: "object"
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        age:
+          type: integer
+    NotificationResponse:
+      type: "object"
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        time:
+          type: "string"
+          format: "date-time"
+        id:
+          $ref: '#/components/schemas/Id'
+        type:
+          type: string
+        subscriptionId:
+          type: string
+    LocationNotification:
+      type: "object"
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        source:
+          type: string
+        type:
+          type: string
+        specversion:
+          type: string
+        datacontenttype:
+          type: string
+        data:
+          $ref: '#/components/schemas/EventData'
+        time:
+          type: "string"
+          format: "date-time"
+    EventData:
+      type: "object"
+      properties:
+        device:
+          $ref: '#/components/schemas/Device'
+        area:
+          $ref: '#/components/schemas/Area'
+        subscriptionId:
+          type: string
+    Device:
+      type: "object"
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+    Area:
+      type: "object"
+      properties:
+        areaType:
+          type: string
+        center:
+          $ref: '#/components/schemas/Center'
+        radius:
+          type: integer
+    Center:
+      type: "object"
+      properties:
+        longitude:
+          type: number
+          format: double
+        latitude:
+          type: number
+          format: double
+    Age:
+      type: integer
   parameters:
     Id:
       name: id
@@ -300,3 +407,15 @@ components:
       required: true
       schema:
         $ref: "#/components/schemas/Id"
+    PhoneNumber:
+      in: path
+      name: phoneNumber
+      required: true
+      schema:
+        $ref: "#/components/schemas/PhoneNumber"
+    Age:
+      in: path
+      name: age
+      required: true
+      schema:
+        $ref: "#/components/schemas/Age"
