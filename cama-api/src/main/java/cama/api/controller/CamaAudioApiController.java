@@ -22,7 +22,7 @@ public class CamaAudioApiController implements  DefaultApi {
     public ResponseEntity<TaskResponse> createTaskFromFile(MultipartFile file) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[createTask-Audio] task = {}, x-correlator: {}", file.getName(), xCorrelator);
+        log.debug("[createTask-Audio] task = {}", file.getName());
         TaskResponse taskResponse = null; //todo add impl
         MDC.clear();
         return ResponseEntity.ok()

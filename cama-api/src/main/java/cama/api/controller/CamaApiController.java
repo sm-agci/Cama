@@ -27,7 +27,7 @@ public class CamaApiController implements CamaApiApi {
     public ResponseEntity<SendCodeResponse> sendCode(SendCodeBody otpMessage) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[sendCode] otpMessage = {}, x-correlator: {}", otpMessage, xCorrelator);
+        log.debug("[sendCode] otpMessage = {}", otpMessage);
         SendCodeResponse response = camaApiOtpService.sendCode(otpMessage, xCorrelator);
         MDC.clear();
         return ResponseEntity.ok()
@@ -38,7 +38,7 @@ public class CamaApiController implements CamaApiApi {
     public ResponseEntity<Object> validateCode(ValidateCodeBody otpValidateCode) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[validateCode] otpValidateCode = {}, x-correlator: {}", otpValidateCode, xCorrelator);
+        log.debug("[validateCode] otpValidateCode = {}", otpValidateCode);
         camaApiOtpService.validateCode(otpValidateCode, xCorrelator);
         MDC.clear();
         return ResponseEntity.noContent().build();
@@ -48,7 +48,7 @@ public class CamaApiController implements CamaApiApi {
     public ResponseEntity<TaskResponse> createTask(Task task) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[createTask] task = {}, x-correlator: {}", task, xCorrelator);
+        log.debug("[createTask] task = {}", task);
         TaskResponse taskResponse = camaApiFencingService.createTask(task, xCorrelator);
         MDC.clear();
         return ResponseEntity.ok()
@@ -59,7 +59,7 @@ public class CamaApiController implements CamaApiApi {
     public ResponseEntity<Void> deleteTask(String id) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[deleteTask] taskId = {}, x-correlator: {}", id, xCorrelator);
+        log.debug("[deleteTask] taskId = {}", id);
         camaApiFencingService.deleteTask(id, xCorrelator);
         MDC.clear();
         return ResponseEntity.noContent().build();
@@ -69,7 +69,7 @@ public class CamaApiController implements CamaApiApi {
     public ResponseEntity<TaskResponse> getTask(String id) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
-        log.debug("[getTask] taskId = {}, x-correlator: {}", id, xCorrelator);
+        log.debug("[getTask] taskId = {}", id);
         TaskResponse taskResponse = camaApiFencingService.getTask(id, xCorrelator);
         MDC.clear();
         return ResponseEntity.ok()

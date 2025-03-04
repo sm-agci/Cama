@@ -20,3 +20,33 @@ X-API-KEY: GkZyQ8WpMTNXr4v1C3LA6YdF
     "authenticationId" : "99fea2c0-f5bc-4730-8cb5-3f24d21e8f5f",
     "code" : "V95E"
 }
+
+### POST retrive notification
+POST http://localhost:8080/api/v1/cama/notifications/retrieve
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f198
+X-API-KEY: GkZyQ8WpMTNXr4v1C3LA6YdF
+
+{
+  "id": "6a11dad7-64b3-4f12-a28f-8a24411fe8e0",
+  "source": "com.orange.camara.geofencing",
+  "type": "org.camaraproject.geofencing.v0.area-entered",
+  "specversion": "1.0",
+  "datacontenttype": "application/json",
+  "data": {
+    "device": {
+      "phoneNumber": "+33699901032"
+    },
+    "area": {
+      "areaType": "CIRCLE",
+      "center": {
+        "latitude": 48.8,
+        "longitude": 2.29
+      },
+      "radius": 2000
+    },
+    "subscriptionId": "5c9b3fa2-6d65-4768-ba52-a7281a525789"
+  },
+  "time": "2024-01-16T15:37:04.052088556Z"
+}

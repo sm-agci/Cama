@@ -1,17 +1,15 @@
 package cama.api.controller;
 
 import cama.api.config.CamaFencingConfig;
-import cama.api.config.CamaOtpConfig;
-import cama.api.config.CamaOtpServiceConfig;
 import cama.api.generate.dto.*;
-import cama.api.local.otp.CamaOtpLocalMockService;
-import cama.api.webclient.CamaOtpWebClient;
 import cama.api.webclient.OplSandboxGeofencingClient;
-import cama.api.webclient.OplWebClientProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -19,44 +17,57 @@ import java.util.List;
 @AllArgsConstructor
 class CamaApiFencingService {
 
-    private final CamaFencingConfig config;
-    private final OplSandboxGeofencingClient webClient;
+    private final TaskStorage taskStorage;
 
     TaskResponse createTask(Task task, String xCorrelator) {
         SubscriptionRequest subscriptionRequest = createSubscriptionRequest(task);
-        Subscription response = webClient.post(config.getUrl(),
-                subscriptionRequest, xCorrelator, Subscription.class);
-        return mapToTaskResponse(response);
+        log.info("Creating subscription: {}, task: {}", task, subscriptionRequest);
+//        Subscription response = webClient.post(config.getUrl(),
+//                subscriptionRequest, xCorrelator, Subscription.class);
+        Subscription response = null;
+        log.info("Subscription response: {}, task: {}", response, task);
+        TaskResponse taskResponse= mapToTaskResponse(task, response);
+        taskStorage.save(task.getPhoneNumber(), taskResponse);
+        return taskResponse;
     }
 
     private SubscriptionRequest createSubscriptionRequest(Task task) {
-//        "protocol": "HTTP",
-//                "sink": "https://notificationSendServer12.supertelco.com",
-//                "types": [
-//        "org.camaraproject.geofencing-subscriptions.v0.area-entered"
-//  ],
-//        "config": {
-//            "subscriptionDetail": {
-//                "device": {
-//                    "phoneNumber": "+33699901032"
-//                },
-//                "area": {
-//                    "areaType": "CIRCLE",
-//                            "center": {
-//                        "latitude": "48.80",
-//                                "longitude": "2.259"
-//                    },
-//                    "radius": 2000
-//                }
-//            },
-//            "initialEvent": true,
-//                    "subscriptionMaxEvents": 10,
-//                    "subscriptionExpireTime": "2024-03-22T05:40:58.469Z"
-//        }
-        return null;
+        SubscriptionDetail subscriptionDetail = new SubscriptionDetail();
+        Device device = new Device();
+        device.setPhoneNumber("+33699901033"); // todo set
+        subscriptionDetail.setDevice(device);
+        Circle area = new Circle();
+        area.setRadius(2000);//todo set
+        area.setCenter(new Point(48.86074,2.29485)); //todo set
+        area.setAreaType(AreaType.CIRCLE);
+        subscriptionDetail.setArea(area);
+        Config config = new Config();
+        config.setInitialEvent(true);
+        config.setSubscriptionDetail(subscriptionDetail);
+//        config.setSubscriptionMaxEvents(20); //todo set?
+//        config.setSubscriptionExpireTime(); //todo set?
+        SubscriptionRequest request =new SubscriptionRequest();
+        request.setProtocol(Protocol.HTTP);
+       // request.setSink(URI.create("https://cama-api.onrender.com/api/v1/cama/notifications/retrieve")); //todo set
+        request.setSink(URI.create("http://localhost:8080/api/v1/cama/notifications/retrieve")); //todo set
+        request.setTypes(List.of(SubscriptionEventType.ENTERED, SubscriptionEventType.LEFT));  //todo set
+        request.setTypes(List.of(SubscriptionEventType.ENTERED, SubscriptionEventType.LEFT));  //todo set
+        request.setConfig(config);
+        return request;
     }
 
-    private TaskResponse mapToTaskResponse(Subscription subscription) {
+    private TaskResponse mapToTaskResponse(Task task, Subscription subscription) {
+        TaskResponse response = new TaskResponse();
+        response.setId(subscription.getId());
+        response.setPhoneNumber(subscription.getConfig().getSubscriptionDetail().getDevice().getPhoneNumber());
+        response.setArea(subscription.getConfig().getSubscriptionDetail().getArea());
+        response.setAddress("Paris Eiffel");//todo set
+        response.setStartTime(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        response.setEndTime(null); //todo set
+        response.setType(subscription.getTypes());
+        response.setStatus(subscription.getStatus().getValue());
+
+        return response;
 //        {
 //            "protocol": "HTTP",
 //                "sink": "https://endpoint.example.com/sink",
@@ -89,17 +100,17 @@ class CamaApiFencingService {
 //                "expiresAt": "2024-07-11T19:08:47.612Z",
 //                "status": "ACTIVE"
 //        }
-        return null;
     }
 
     void deleteTask(String taskId, String xCorrelator) {
+        taskStorage.delete(taskId);
     }
 
     TaskResponse getTask(String id, String xCorrelator) {
-        return null;
+       return taskStorage.get(id);
     }
 
-    List<TaskResponse> getTasks(String xCorrelator) {
-        return null;
+    List<TaskResponse> getTasks(String phoneNumber) {
+        return taskStorage.getAll(phoneNumber);
     }
 }

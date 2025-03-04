@@ -15,6 +15,43 @@ Content-Type: application/json
 x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
 
 {
-    "authenticationId" : "99fea2c0-f5bc-4730-8cb5-3f24d21e8f5f",
-    "code" : "V95E"
+    "authenticationId" : "528a1eb2-ee34-40dc-8483-a6b919911639",
+    "code" : "PQ7U"
 }
+
+### POST receive Fencing notification
+POST https://cama-api.onrender.com/api/v1/cama/notifications/retrieve
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
+
+{
+  "id": "9f625ec0-f8d6-4ef2-a1ee-62a0424b4cc9",
+  "source": "com.orange.camara.geofencing",
+  "type": "org.camaraproject.geofencing.v0.area-entered",
+  "specversion": "1.0",
+  "datacontenttype": "application/json",
+  "data": {
+    "device": {
+      "phoneNumber": "+33699901032"
+    },
+    "area": {
+      "areaType": "CIRCLE",
+      "center": {
+        "latitude": 48.8,
+        "longitude": 2.29
+      },
+      "radius": 2000
+    },
+    "subscriptionId": "19fbaf8d-0b76-4fde-a8d1-5991613e2ab1"
+  },
+  "time": "2024-01-16T15:26:29.388137895Z"
+}
+
+
+### GET notifications from mobile
+GET https://cama-api.onrender.com/api/v1/cama/notifications/33699901032/10
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
+

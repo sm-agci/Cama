@@ -313,11 +313,23 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/Id'
-        command:
+        address:
           type: string
-          description: temporal, short code to be validated
-          maxLength: 1000
-          minLength: 1
+        status:
+          type: string
+        area:
+          $ref: '#/components/schemas/Area'
+        start_time:
+          type: "string"
+        end_time:
+          type: "string"
+        creation_time:
+          type: "string"
+          format: "date-time"
+        type:
+          type: array
+          items:
+            type: string
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumber'
       required:
@@ -347,6 +359,8 @@ components:
           type: string
         subscriptionId:
           type: string
+        area:
+          $ref: '#/components/schemas/Area'
     LocationNotification:
       type: "object"
       properties:
@@ -379,24 +393,69 @@ components:
       properties:
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumber'
+    AreaType:
+      type: string
+      description: |
+        Type of this area.
+        CIRCLE - The area is defined as a circle.
+      enum:
+        - CIRCLE
     Area:
-      type: "object"
+      type: object
       properties:
         areaType:
-          type: string
-        center:
-          $ref: '#/components/schemas/Center'
-        radius:
-          type: integer
-    Center:
-      type: "object"
+          $ref: "#/components/schemas/AreaType"
+      required:
+        - areaType
+      discriminator:
+        propertyName: areaType
+        mapping:
+          CIRCLE: "#/components/schemas/Circle"
+
+    Circle:
+        description: Circular area
+        allOf:
+          - $ref: "#/components/schemas/Area"
+          - type: object
+            properties:
+              center:
+                $ref: "#/components/schemas/Point"
+              radius:
+                type: integer
+                minimum: 1
+                maximum: 200000
+            required:
+              - center
+              - radius
+    Point:
+      type: object
+      description: Coordinates (latitude, longitude) defining a location in a map.
+      required:
+        - latitude
+        - longitude
       properties:
-        longitude:
-          type: number
-          format: double
         latitude:
-          type: number
-          format: double
+          $ref: "#/components/schemas/Latitude"
+        longitude:
+          $ref: "#/components/schemas/Longitude"
+      example:
+        latitude: 50.735851
+        longitude: 7.10066
+    Latitude:
+      description: Latitude component of a location.
+      type: number
+      format: double
+      minimum: -90
+      maximum: 90
+      example: 50.735851
+
+    Longitude:
+        description: Longitude component of location.
+        type: number
+        format: double
+        minimum: -180
+        maximum: 180
+        example: 7.10066
     Age:
       type: integer
   parameters:
