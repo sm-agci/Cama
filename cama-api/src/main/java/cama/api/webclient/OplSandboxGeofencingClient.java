@@ -11,7 +11,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class OplSandboxGeofencingClient extends WebClientBase{
+public class OplSandboxGeofencingClient extends WebClientBase {
     private static final String AUTHORIZATION = "Authorization";
     private static final String PROTOCOL = "https";
 
@@ -21,7 +21,7 @@ public class OplSandboxGeofencingClient extends WebClientBase{
     public <T, V> T post(String path, V body, String xCorrelator, Class<T> clazz) {
         log.info("OTP MOCK POST: Connecting to external service, with request body: {}, xCorrelator: {}", body, xCorrelator);
         Map<String, String> headers = new HashMap<>();
-        headers.put(AUTHORIZATION, webClientProperties.getAuthHeader());
+        headers.put(AUTHORIZATION, "Basic " + webClientProperties.getAuthHeader());
         headers.put(X_CORRELATOR_HEADER_NAME, xCorrelator);
         return post(webClientBuilder, webClientProperties.getHost(), webClientProperties.getPort(),
                 path, headers, body, clazz);

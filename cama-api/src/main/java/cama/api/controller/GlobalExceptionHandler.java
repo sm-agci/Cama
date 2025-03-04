@@ -55,6 +55,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler({Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected void handleException(Exception ex) {
-        log.error("Unable to process: {}", ex);
+        log.error("Unable to process: {}, \n{}", ex.getMessage(), ex.getStackTrace());
     }
 }

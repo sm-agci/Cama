@@ -12,8 +12,6 @@
         <module>cama-api</module>
         <module>cama-otp-service</module>
         <module>cama-geofencing</module>
-        <module>cama-mobile</module>
-        <module>utils</module>
     </modules>
 
     <properties>
