@@ -22,9 +22,14 @@ public class RenderWebClient extends WebClientBase {
         log.info("RENDER GET: Connecting to render app: {}", renderConfig.getUrl());
         WebClient webClient = builder.build();
         webClient.get()
-                .uri(uriBuilder -> uriBuilder.scheme(renderConfig.getProtocol())
+                .uri(uriBuilder -> renderConfig.getPort() != 0 ?
+                        uriBuilder.scheme(renderConfig.getProtocol())
+                                .host(renderConfig.getHost())
+                                .port(renderConfig.getPort())
+                                .path(renderConfig.getUrl())
+                                .build()
+                        : uriBuilder.scheme(renderConfig.getProtocol())
                         .host(renderConfig.getHost())
-                        .port(renderConfig.getPort())
                         .path(renderConfig.getUrl())
                         .build())
                 .retrieve()
