@@ -41,13 +41,13 @@ abstract class WebClientBase {
         return DEFAULT_PROTOCOL;
     }
 
-    private Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {
+    protected Mono<? extends Throwable> handleClientError(ClientResponse clientResponse) {
         HttpStatusCode statusCode = clientResponse.statusCode();
         log.warn("Detected client error response with status: {}", statusCode);
         return clientResponse.createException();
     }
 
-    private static ExchangeFilterFunction logRequest() {
+    protected static ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
             log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
             clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));

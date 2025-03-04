@@ -222,6 +222,15 @@ paths:
                 minItems: 0
                 items:
                   $ref: "#/components/schemas/NotificationResponse"
+  /api/v1/cama/keep-running:
+    get:
+      tags:
+        - keep render running
+      summary: "api/v1/cama/keep-running"
+      operationId: "keepRunning"
+      responses:
+        "200":
+          description: "OK"
 components:
   schemas:
     PhoneNumber:
