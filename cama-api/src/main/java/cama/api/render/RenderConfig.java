@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class RenderConfig {
     private String host;
     private String protocol;
+    private int port;
     private String url;
     private String schedule;
 }

@@ -17,18 +17,21 @@ import java.util.Map;
 public class RenderWebClient extends WebClientBase {
     private final WebClient.Builder builder;
     private final RenderConfig renderConfig;
+
     public void get() {
         log.info("RENDER GET: Connecting to render app: {}", renderConfig.getUrl());
-        WebClient webClient = builder.filter(logRequest()).build();
+        WebClient webClient = builder.build();
         webClient.get()
                 .uri(uriBuilder -> uriBuilder.scheme(renderConfig.getProtocol())
                         .host(renderConfig.getHost())
+                        .port(renderConfig.getPort())
                         .path(renderConfig.getUrl())
                         .build())
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
-                .bodyToMono(Void.class)
-                .block();
+                .toBodilessEntity()
+                .doOnSuccess(e -> log.debug("RENDER status: {}", e.getStatusCode()))
+                .doOnError(e -> log.error("RENDER :{}", e.getMessage()))
+                .subscribe();
 
     }
 }
