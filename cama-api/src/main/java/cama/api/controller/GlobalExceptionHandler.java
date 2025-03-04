@@ -23,6 +23,7 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorInfo(401, "UNAUTHENTICATED", "Request not authenticated due to missing, invalid, or expired credentials"));
     }
+
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ErrorInfo> handleException(WebClientResponseException ex) {
         log.error("Unable to get CAMA OTP MOCK response, {}", ex.getMessage());
@@ -43,11 +44,17 @@ class GlobalExceptionHandler {
                 .body(new ErrorInfo(500, "INTERNAL", "Server error"));
     }
 
-    @ExceptionHandler({Exception.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({InvalidOtpCodeException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ErrorInfo> handleException(InvalidOtpCodeException ex) {
         log.error("Unable to validate code: {}", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorInfo(400, "ONE_TIME_PASSWORD_SMS.INVALID_OTP", "The provided OTP is not valid for this authenticationId"));
+    }
+
+    @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected void handleException(Exception ex) {
+        log.error("Unable to process: {}", ex);
     }
 }
