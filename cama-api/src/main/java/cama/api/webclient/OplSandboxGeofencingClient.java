@@ -33,7 +33,12 @@ public class OplSandboxGeofencingClient extends WebClientBase {
 
     public <T, V> T post(String path, V body, String xCorrelator, Class<T> clazz) {
         log.info("OPL SANDBOX POST: Connecting to external service, with request body: {}, xCorrelator: {}", body, xCorrelator);
-        WebClient webClient = builder.filter(logRequest()).build();
+        WebClient webClient = webClientProperties.isAdditionalLogs() ?
+                builder.filters(exchangeFilterFunctions -> {
+                    exchangeFilterFunctions.add(logRequest());
+                    exchangeFilterFunctions.add(logResponse());
+                }).build()
+                : builder.build();
         String bodyStr = convertBody(body);
         return obtainAccessToken().flatMap(token ->
                 webClient.post()
@@ -50,7 +55,7 @@ public class OplSandboxGeofencingClient extends WebClientBase {
                         .header(AUTHORIZATION, token)
                         .header(X_CORRELATOR_HEADER_NAME, xCorrelator)
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .body(BodyInserters.fromValue(bodyStr))
+                        .body(BodyInserters.fromValue(body))
                         .retrieve()
                         .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
                         .bodyToMono(clazz)
@@ -58,20 +63,16 @@ public class OplSandboxGeofencingClient extends WebClientBase {
         ).block();
     }
 
-    //todo sprawdzić czemu zwykłe przekazanie body nie działa
-//    Cannot construct instance of `com.camara.geofencing.model.Protocol`, problem: Unexpected value 'SubscriptionRequest'
-//    at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 13] (through reference chain: com.camara.geofencing.model.SubscriptionRequest["protocol"]
     @SneakyThrows
     private <V> String convertBody(V body) {
         SimpleModule customModule = new SimpleModule();
         customModule.addSerializer(LocalDateTime.class, new LDTSerializer());
 
-       ObjectMapper objectMapper= new ObjectMapper()
+        ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerModule(new JavaTimeModule())
-               .registerModule(customModule);
-        String b= objectMapper.writeValueAsString(body);
-        return b;
+                .registerModule(customModule);
+        return objectMapper.writeValueAsString(body);
     }
 
     private Mono<String> obtainAccessToken() {
@@ -90,6 +91,7 @@ public class OplSandboxGeofencingClient extends WebClientBase {
                 .log()
                 .map(accessToken -> {
                     this.accessToken = accessToken;
+                    this.accessToken.setExprieAt();
                     return accessToken.getTokenType() + " " + accessToken.getAccessToken();
                 });
     }

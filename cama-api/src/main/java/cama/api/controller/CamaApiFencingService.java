@@ -3,10 +3,7 @@ package cama.api.controller;
 import cama.api.ai.AiCommandParser;
 import cama.api.ai.Command;
 import cama.api.config.CamaFencingConfig;
-import cama.api.generate.dto.Subscription;
-import cama.api.generate.dto.SubscriptionRequest;
-import cama.api.generate.dto.Task;
-import cama.api.generate.dto.TaskResponse;
+import cama.api.generate.dto.*;
 import cama.api.mappers.SubscriptionRequestMapper;
 import cama.api.mappers.TaskResponseMapper;
 import cama.api.webclient.OplSandboxGeofencingClient;
@@ -35,9 +32,10 @@ class CamaApiFencingService {
         log.info("Creating subscription: {}, task: {}", task, subscriptionRequest);
         Subscription response = webClient.post(config.getSimulatorUrl(),
                 subscriptionRequest, xCorrelator, Subscription.class);
+        response.setProtocol(Protocol.HTTP);
 //        Subscription response= null;
         log.info("Subscription response: {}, task: {}", response, task);
-        TaskResponse taskResponse= taskResponseMapper.mapToTaskResponse(command, response);
+        TaskResponse taskResponse= taskResponseMapper.mapToTaskResponse(command, task, response);
         taskStorage.save(task.getPhoneNumber(), taskResponse);
         return taskResponse;
     }

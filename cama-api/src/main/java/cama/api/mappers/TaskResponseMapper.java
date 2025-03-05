@@ -6,21 +6,24 @@ import cama.api.generate.dto.Task;
 import cama.api.generate.dto.TaskResponse;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
 public class TaskResponseMapper {
 
-    public TaskResponse mapToTaskResponse(Command command, Subscription subscription) {
+    public TaskResponse mapToTaskResponse(Command command, Task task, Subscription subscription) {
         TaskResponse response = new TaskResponse();
         response.setId(subscription.getId());
         response.setPhoneNumber(subscription.getConfig().getSubscriptionDetail().getDevice().getPhoneNumber());
         response.setArea(subscription.getConfig().getSubscriptionDetail().getArea());
         response.setAddress(command.getAddress());
+        response.setCommand(task.getCommand());
+        response.setProcessedCommand(command.getAiResponse());
         response.setStartTime(subscription.getStartsAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         response.setEndTime(subscription.getExpiresAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         response.setType(subscription.getTypes());
-        response.setStatus(subscription.getStatus().getValue());
+        response.setStatus(subscription.getStatus() != null ? subscription.getStatus().getValue() : null);
 
         return response;
 //        {

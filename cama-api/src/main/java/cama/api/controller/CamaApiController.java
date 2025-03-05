@@ -77,11 +77,11 @@ public class CamaApiController implements CamaApiApi {
     }
 
     @Override
-    public ResponseEntity<List<TaskResponse>> getTasks() {
+    public ResponseEntity<List<TaskResponse>> getTasks(String phoneNumber) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
         log.debug("[getTask] x-correlator: {}", xCorrelator);
-        List<TaskResponse> tasks = camaApiFencingService.getTasks(xCorrelator);
+        List<TaskResponse> tasks = camaApiFencingService.getTasks(phoneNumber);
         MDC.clear();
         return ResponseEntity.ok()
                 .body(tasks);

@@ -19,10 +19,15 @@ class TaskStorage {
     }
 
     void save(String phoneNumber, TaskResponse task) {
-        if (!tasks.containsKey(phoneNumber)) {
-            tasks.put(phoneNumber, new ArrayList<>());
+        String number = addPlusIfMissing(phoneNumber);
+        if (!tasks.containsKey(number)) {
+            tasks.put(number, new ArrayList<>());
         }
-        tasks.get(phoneNumber).add(task);
+        tasks.get(number).add(task);
+    }
+
+    private static String addPlusIfMissing(String phoneNumber) {
+        return phoneNumber.startsWith("+") ? phoneNumber : "+" + phoneNumber;
     }
 
     TaskResponse get(String id) {
@@ -31,8 +36,9 @@ class TaskStorage {
     }
 
     List<TaskResponse> getAll(String phoneNumber) {
-        if (tasks.containsKey(phoneNumber)) {
-            return tasks.get(phoneNumber);
+        String number= addPlusIfMissing(phoneNumber);
+        if (tasks.containsKey(number)) {
+            return tasks.get(number);
         }
         return new ArrayList<>();
     }

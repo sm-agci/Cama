@@ -18,4 +18,5 @@ public class OplWebClientProperties {
     private String authHeader;
     private String protocol;
     private String tokenUrl;
+    private boolean additionalLogs;
 }

@@ -78,11 +78,14 @@ paths:
           description: "Unauthorized"
         "500":
           description: "Internal Server Error"
+  /api/v1/cama/tasks/all/{phoneNumber}:
     get:
       summary: "Get cama tasks list"
       operationId: "get tasks"
       tags:
         - Cama API
+      parameters:
+        - $ref: "#/components/parameters/PhoneNumber"
       responses:
         "200":
           description: "OK"
@@ -338,7 +341,11 @@ components:
         type:
           type: array
           items:
-            type: string
+            type: "string"
+        command:
+          type: "string"
+        processed_command:
+          type: "string"
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumber'
       required:

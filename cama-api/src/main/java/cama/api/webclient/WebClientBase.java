@@ -62,4 +62,21 @@ abstract class WebClientBase {
             return Mono.just(clientRequest);
         });
     }
+
+    protected ExchangeFilterFunction logResponse() {
+        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
+            log.info("Response Status: {}", clientResponse.statusCode());
+            clientResponse.headers().asHttpHeaders().forEach((name, values) ->
+                    values.forEach(value -> log.info("Response Header: {}={}", name, value))
+            );
+
+            return clientResponse.bodyToMono(String.class)
+                    .map(body -> {
+                        log.info("Response Body: {}", body);
+                        return ClientResponse.from(clientResponse)
+                                .body(body)
+                                .build();
+                    });
+        });
+    }
 }

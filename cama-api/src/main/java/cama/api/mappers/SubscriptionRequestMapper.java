@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Component
@@ -56,10 +58,12 @@ public class SubscriptionRequestMapper {
         config.setSubscriptionMaxEvents(fencingConfig.getMaxEvents());
         OffsetDateTime endTime = OffsetDateTime.now().plusMinutes(fencingConfig.getMaxWindowInMin());
         if(command.getTime() != null) {
-            ZoneId zoneId = ZoneId.systemDefault();
-            endTime = command.getTime().atZone(zoneId).toOffsetDateTime().plusMinutes(fencingConfig.getMaxWindowInMin());
+            ZoneId zoneId = ZoneOffset.of("+00:00");
+            LocalDateTime time = command.getTime().plusMinutes(fencingConfig.getMaxWindowInMin());
+            endTime = time.atZone(zoneId).toOffsetDateTime();
         }
         config.setSubscriptionExpireTime(endTime);
+        //todo format expiretime się nie zgadza po zmapowaniu!!!
         SubscriptionRequest request = new HTTPSubscriptionRequest();
         request.setSink(URI.create(fencingConfig.getNotificationUrl()));
         request.setProtocol(Protocol.HTTP);

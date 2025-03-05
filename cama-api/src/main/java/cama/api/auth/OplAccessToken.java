@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @NoArgsConstructor
 public class OplAccessToken {
@@ -29,11 +30,11 @@ public class OplAccessToken {
     public OplAccessToken(String tokenType, String accessToken, String expireIn) {
         this.tokenType = tokenType;
         this.accessToken = accessToken;
-        setExprieIn(expireIn);
+        this.expireIn = expireIn;
+        setExprieAt();
     }
 
-    public void setExprieIn(String expireIn) {
-        this.expireIn = expireIn;
+    public void setExprieAt() {
         this.expireAt = LocalDateTime.now().plusSeconds(Integer.parseInt(expireIn));
     }
 }
