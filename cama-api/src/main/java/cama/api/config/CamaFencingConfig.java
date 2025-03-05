@@ -14,4 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class CamaFencingConfig {
     private String url;
     private String simulatorUrl;
+    private int radius;
+    private int maxEvents;
+    private int maxWindowInMin;
+    private String notificationUrl;
 }

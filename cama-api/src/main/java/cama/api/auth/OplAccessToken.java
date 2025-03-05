@@ -1,13 +1,14 @@
 package cama.api.auth;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
 public class OplAccessToken {
     @Setter
     @Getter
@@ -23,6 +24,7 @@ public class OplAccessToken {
     @Getter
     @JsonIgnore
     private LocalDateTime expireAt;
+
 
     public OplAccessToken(String tokenType, String accessToken, String expireIn) {
         this.tokenType = tokenType;
