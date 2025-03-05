@@ -18,11 +18,18 @@ abstract class WebClientBase {
     private static final String DEFAULT_PROTOCOL = "http";
     protected static final String X_CORRELATOR_HEADER_NAME = "x-correlator";
 
+//    private final WebClientRetryFactory retryFactory;
+
     public <T, V> T post(WebClient.Builder builder, String host, int port, String path, Map<String, String> headers, V body, Class<T> clazz) {
         log.info("POST: Connecting to external service, with request body: {}", body);
         WebClient webClient = builder.filter(logRequest()).build();
         WebClient.RequestBodySpec spec = webClient.post()
-                .uri(uriBuilder -> uriBuilder.scheme(getProtocol())
+                .uri(uriBuilder -> port == 0 ?
+                        uriBuilder.scheme(getProtocol())
+                                .host(host)
+                                .path(path)
+                                .build()
+                        : uriBuilder.scheme(getProtocol())
                         .host(host)
                         .port(port)
                         .path(path)
@@ -32,7 +39,8 @@ abstract class WebClientBase {
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleClientError)
                 .bodyToMono(clazz)
-                .block();
+//                .retryWhen(retryFactory.retrySpec())
+               .block();
         log.info("External service response: {}", response);
         return response;
     }

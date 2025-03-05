@@ -13,4 +13,5 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class CamaFencingConfig {
     private String url;
+    private String simulatorUrl;
 }

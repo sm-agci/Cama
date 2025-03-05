@@ -3,12 +3,14 @@ package cama.api.controller;
 import cama.api.config.CamaFencingConfig;
 import cama.api.generate.dto.*;
 import cama.api.webclient.OplSandboxGeofencingClient;
+import cama.api.webclient.OplWebClientProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -18,13 +20,16 @@ import java.util.List;
 class CamaApiFencingService {
 
     private final TaskStorage taskStorage;
+    private final OplSandboxGeofencingClient webClient;
+    private final CamaFencingConfig config;
+
 
     TaskResponse createTask(Task task, String xCorrelator) {
         SubscriptionRequest subscriptionRequest = createSubscriptionRequest(task);
         log.info("Creating subscription: {}, task: {}", task, subscriptionRequest);
-//        Subscription response = webClient.post(config.getUrl(),
+//        Subscription response = webClient.post(config.getSimulatorUrl(),
 //                subscriptionRequest, xCorrelator, Subscription.class);
-        Subscription response = null;
+        Subscription response= null;
         log.info("Subscription response: {}, task: {}", response, task);
         TaskResponse taskResponse= mapToTaskResponse(task, response);
         taskStorage.save(task.getPhoneNumber(), taskResponse);
@@ -44,14 +49,14 @@ class CamaApiFencingService {
         Config config = new Config();
         config.setInitialEvent(true);
         config.setSubscriptionDetail(subscriptionDetail);
-//        config.setSubscriptionMaxEvents(20); //todo set?
-//        config.setSubscriptionExpireTime(); //todo set?
-        SubscriptionRequest request =new SubscriptionRequest();
+        config.setSubscriptionMaxEvents(5); //todo set?
+        config.setSubscriptionExpireTime(OffsetDateTime.now().plusMinutes(60)); //todo set?
+        SubscriptionRequest request =new HTTPSubscriptionRequest();
+        request.setSink(URI.create("https://cama-api.onrender.com/api/v1/cama/notifications/retrieve"));
         request.setProtocol(Protocol.HTTP);
-       // request.setSink(URI.create("https://cama-api.onrender.com/api/v1/cama/notifications/retrieve")); //todo set
-        request.setSink(URI.create("http://localhost:8080/api/v1/cama/notifications/retrieve")); //todo set
-        request.setTypes(List.of(SubscriptionEventType.ENTERED, SubscriptionEventType.LEFT));  //todo set
-        request.setTypes(List.of(SubscriptionEventType.ENTERED, SubscriptionEventType.LEFT));  //todo set
+      //  request.setSink(URI.create("http://localhost:8080/api/v1/cama/notifications/retrieve")); //todo set
+        request.setTypes(List.of(SubscriptionEventType.ENTERED));  //todo set
+//        request.setTypes(List.of(SubscriptionEventType.ENTERED, SubscriptionEventType.LEFT));  //todo set
         request.setConfig(config);
         return request;
     }

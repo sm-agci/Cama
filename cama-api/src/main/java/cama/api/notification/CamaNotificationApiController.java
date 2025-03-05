@@ -18,13 +18,16 @@ public class CamaNotificationApiController implements LocationNotificationApi {
 
     private final CamaApiNotificationService service;
 
-        @Override
+    @Override
     public ResponseEntity<Void> retrieveNotifications(LocationNotification notification) {
         String xCorrelator = UUID.randomUUID().toString();
         MDC.put("uniqueId", xCorrelator);
         log.debug("[retrieveNotifications] x-correlator: {}, notification: {}", xCorrelator, notification);
-        //todo subscriptionEnd - when comes remove task - do not return this to mobile
-        service.storeNotification(notification, xCorrelator);
+        if (!notification.getType().contains("subscription-ends")) {
+            service.storeNotification(notification, xCorrelator);
+        } else {
+            //todo subscriptionEnd - when comes remove task
+        }
         MDC.clear();
         return ResponseEntity.noContent().build();
     }

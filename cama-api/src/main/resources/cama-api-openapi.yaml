@@ -485,5 +485,6 @@ components:
       in: path
       name: age
       required: true
+      description: number of minutes, if not set api will return all notifications
       schema:
         $ref: "#/components/schemas/Age"

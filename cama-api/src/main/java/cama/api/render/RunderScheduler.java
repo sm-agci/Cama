@@ -13,10 +13,11 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 class RunderScheduler {
 
     private final RenderWebClient renderWebClient;
+    private final RenderConfig config;
 
     @Scheduled(fixedRateString = "${render.schedule}", initialDelay = 5000)
     public void keepRenderEndpointRunning() {
-        log.debug("Scheduled call to render");
+        log.debug("Scheduled call to render, config: {}", config.getSchedule());
         try {
             renderWebClient.get();
         } catch (WebClientRequestException e) {
