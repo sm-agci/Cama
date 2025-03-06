@@ -2,8 +2,10 @@ package cama.api.webclient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,12 +17,19 @@ import reactor.core.publisher.Mono;
 class WebClientConfig {
 
     @Bean
+    @Primary
     WebClient webClient(WebClient.Builder builder) {
         return  //webClientProperties.isAdditionalLogs() ?
                 builder.filters(exchangeFilterFunctions -> {
                     exchangeFilterFunctions.add(logRequest());
                     exchangeFilterFunctions.add(logResponse());
                 }).build();
+    }
+
+    @Bean
+    @Qualifier("noLogging")
+    WebClient webClientNoResponseLogging(WebClient.Builder builder) {
+        return builder.build();
     }
 
     protected static ExchangeFilterFunction logRequest() {

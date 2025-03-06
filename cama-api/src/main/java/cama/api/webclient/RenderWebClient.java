@@ -3,6 +3,7 @@ package cama.api.webclient;
 import cama.api.render.RenderConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -15,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Component
 public class RenderWebClient extends WebClientBase {
-    private final WebClient webClient;
+    private final @Qualifier("noLogging") WebClient webClient;
     private final RenderConfig renderConfig;
 
     public void get() {
