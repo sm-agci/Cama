@@ -76,6 +76,9 @@ public class OplSandboxGeofencingClient extends WebClientBase {
     }
 
     private Mono<String> obtainAccessToken() {
+        if (webClientProperties.isAdditionalLogs()) {
+            log.debug("Token: {}, headers: {}", accessToken, webClientProperties);
+        }
         if (accessToken != null && accessToken.getAccessToken() != null
                 && LocalDateTime.now().isBefore(accessToken.getExpireAt())) {
             return Mono.just(accessToken.getTokenType() + " " + accessToken.getAccessToken());
