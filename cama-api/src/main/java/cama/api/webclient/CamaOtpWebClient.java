@@ -14,7 +14,7 @@ import java.util.Map;
 public class CamaOtpWebClient extends WebClientBase {
     private static final String API_TOKEN_HEADER_NAME = "X-API-KEY";
 
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClient;
     private final OtpWebClientProperties webClientProperties;
 
     public <T, V> T post(String path, V body, String xCorrelator, Class<T> clazz) {
@@ -22,7 +22,7 @@ public class CamaOtpWebClient extends WebClientBase {
         Map<String, String> headers = new HashMap<>();
         headers.put(API_TOKEN_HEADER_NAME, webClientProperties.getApiKey());
         headers.put(X_CORRELATOR_HEADER_NAME, xCorrelator);
-        return post(webClientBuilder, webClientProperties.getHost(), webClientProperties.getPort(),
+        return post(webClient, webClientProperties.getHost(), webClientProperties.getPort(),
                 path, headers, body, clazz);
     }
 }

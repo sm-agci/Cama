@@ -20,9 +20,8 @@ abstract class WebClientBase {
 
 //    private final WebClientRetryFactory retryFactory;
 
-    public <T, V> T post(WebClient.Builder builder, String host, int port, String path, Map<String, String> headers, V body, Class<T> clazz) {
+    public <T, V> T post(WebClient webClient, String host, int port, String path, Map<String, String> headers, V body, Class<T> clazz) {
         log.info("POST: Connecting to external service, with request body: {}", body);
-        WebClient webClient = builder.filter(logRequest()).build();
         WebClient.RequestBodySpec spec = webClient.post()
                 .uri(uriBuilder -> port == 0 ?
                         uriBuilder.scheme(getProtocol())
@@ -53,30 +52,5 @@ abstract class WebClientBase {
         HttpStatusCode statusCode = clientResponse.statusCode();
         log.warn("Detected client error response with status: {}", statusCode);
         return clientResponse.createException();
-    }
-
-    protected static ExchangeFilterFunction logRequest() {
-        return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            log.info("Request: {} {}", clientRequest.method(), clientRequest.url());
-            clientRequest.headers().forEach((name, values) -> values.forEach(value -> log.info("{}={}", name, value)));
-            return Mono.just(clientRequest);
-        });
-    }
-
-    protected ExchangeFilterFunction logResponse() {
-        return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
-            log.info("Response Status: {}", clientResponse.statusCode());
-            clientResponse.headers().asHttpHeaders().forEach((name, values) ->
-                    values.forEach(value -> log.info("Response Header: {}={}", name, value))
-            );
-
-            return clientResponse.bodyToMono(String.class)
-                    .map(body -> {
-                        log.info("Response Body: {}", body);
-                        return ClientResponse.from(clientResponse)
-                                .body(body)
-                                .build();
-                    });
-        });
     }
 }

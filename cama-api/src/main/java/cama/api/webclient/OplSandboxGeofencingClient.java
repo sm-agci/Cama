@@ -27,18 +27,12 @@ import java.util.Map;
 public class OplSandboxGeofencingClient extends WebClientBase {
     private static final String AUTHORIZATION = "Authorization";
 
-    private final WebClient.Builder builder;
+    private final WebClient webClient;
     private final OplWebClientProperties webClientProperties;
     private OplAccessToken accessToken;
 
     public <T, V> T post(String path, V body, String xCorrelator, Class<T> clazz) {
         log.info("OPL SANDBOX POST: Connecting to external service, with request body: {}, xCorrelator: {}", body, xCorrelator);
-        WebClient webClient = webClientProperties.isAdditionalLogs() ?
-                builder.filters(exchangeFilterFunctions -> {
-                    exchangeFilterFunctions.add(logRequest());
-                    exchangeFilterFunctions.add(logResponse());
-                }).build()
-                : builder.build();
         String bodyStr = convertBody(body);
         return obtainAccessToken().flatMap(token ->
                 webClient.post()
@@ -84,7 +78,7 @@ public class OplSandboxGeofencingClient extends WebClientBase {
             return Mono.just(accessToken.getTokenType() + " " + accessToken.getAccessToken());
         }
 
-        return builder.filter(logRequest()).build().post()
+        return webClient.post()
                 .uri(webClientProperties.getTokenUrl())
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + webClientProperties.getAuthHeader())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)

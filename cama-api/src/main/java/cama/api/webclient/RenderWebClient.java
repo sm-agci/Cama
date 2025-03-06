@@ -15,14 +15,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Component
 public class RenderWebClient extends WebClientBase {
-    private final WebClient.Builder builder;
+    private final WebClient webClient;
     private final RenderConfig renderConfig;
 
     public void get() {
         log.info("RENDER GET: Connecting to render app: {}", renderConfig.getUrl());
-        WebClient webClient = builder.filters(exchangeFilterFunctions -> {
-            exchangeFilterFunctions.add(logRequest());
-        }).build();
         webClient.get()
                 .uri(uriBuilder -> renderConfig.getPort() != 0 ?
                         uriBuilder.scheme(renderConfig.getProtocol())
