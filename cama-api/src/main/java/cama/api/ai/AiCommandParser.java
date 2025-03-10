@@ -26,34 +26,14 @@ public class AiCommandParser {
     public Command parse(Task task) {
         String taskCommand = String.format(promptStr, "When i will come near Eiffel Tower remind me about buying gift for kids friend birthday party.");
         Prompt prompt = new Prompt(taskCommand);
-//        String content = getChatGptContent(prompt, taskCommand);
-//        Command command;
-//        try {
-//            command = objectMapper.readValue(content, Command.class);
-//            command.setTaskCommand(task.getCommand());
-//        } catch (JsonProcessingException e) {
-//            throw new PromptException(e);
-//        }
         Command command = callChatGpt(prompt, taskCommand);
         command.setTaskCommand(task.getCommand());
         return command;
     }
 
-    private String getChatGptContent(Prompt prompt, String taskCommand) {
- //       return "{\"name\": \"Eiffel Tower\",\"address\": \"Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France\",\"latitude\": 48.8584,\"longitude\": 2.2945,\"time\": null}";
-        return chatClient
-//                .prompt(prompt)
-//                .user(taskCommand)
-                .prompt()
-                .user(taskCommand)
-                .call()
-                .content();
-    }
     private Command callChatGpt(Prompt prompt, String taskCommand) {
  //       return "{\"name\": \"Eiffel Tower\",\"address\": \"Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France\",\"latitude\": 48.8584,\"longitude\": 2.2945,\"time\": null}";
         return chatClient
-//                .prompt(prompt)
-//                .user(taskCommand)
                 .prompt()
                 .user(taskCommand)
                 .call()
@@ -68,13 +48,4 @@ public class AiCommandParser {
         command.setAddress("Paris Eiffel");
         return command;
     }
-
-
-  //  Pewnie nawet wystarczyłby 1 prompt, od tego bym zaczął. Udostępnij LLMowi funkcję
-    //  do wyszukiwania koordynatów (bodajże drugie nagranie ze Spring AI dotyczyło konkretnie
-    //  function callingu), w prompcie zacznij od raczej niskiej temperatury (powiedzmy 0,5
-    //  albo nawet niżej), opisz mu proces (1. wyodrębnij takie i takie dane z tekstu, 2.
-    //  użyj tych danych do wywołania podanej funkcji, 3. odebrane koordynaty zapakuj do
-    //  takiego formatu). U nas w projekcie zauważyliśmy, że bardzo duży wpływ ma podanie
-    //  LLMowi przykładu, więc też polecam zawrzeć w prompcie min. 1 przykład inputu/outputu.
 }

@@ -21,10 +21,10 @@ public class ChatClientConfig {
    @Bean
     ChatClient chatClient(ChatClient.Builder builder) {
         var defaultConfig = ChatOptions.builder()
-                .temperature(0.5)
+                .temperature(0.3)
                 .build();
         return builder
-                .defaultSystem("You are an expert Armored Division mechanic.")
+                .defaultSystem("You are and geo location expert")
                 .defaultOptions(defaultConfig)
                 .build();
     }

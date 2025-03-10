@@ -344,6 +344,8 @@ components:
             type: "string"
         command:
           type: "string"
+        place_name:
+          type: "string"
         processed_command:
           type: "string"
         phoneNumber:
