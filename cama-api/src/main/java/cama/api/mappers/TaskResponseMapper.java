@@ -19,7 +19,8 @@ public class TaskResponseMapper {
         response.setArea(subscription.getConfig().getSubscriptionDetail().getArea());
         response.setAddress(command.getAddress());
         response.setCommand(task.getCommand());
-        response.setProcessedCommand(command.getAiResponse());
+        response.setPlaceName(command.getName());
+        response.setProcessedCommand(command.getTaskCommand());
         response.setStartTime(subscription.getStartsAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         response.setEndTime(subscription.getExpiresAt().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         response.setType(subscription.getTypes());

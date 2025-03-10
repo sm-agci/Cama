@@ -2,6 +2,7 @@ package cama.api.controller;
 
 import cama.api.exceptions.BadCredentialsException;
 import cama.api.exceptions.ExternalSystemException;
+import cama.api.exceptions.PromptException;
 import cama.api.generate.dto.ErrorInfo;
 import cama.api.local.otp.InvalidOtpCodeException;
 import cama.api.local.otp.StorageException;
@@ -62,5 +63,10 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected void handleException(ExternalSystemException ex) {
         log.error("Unable to process call: {}", ex.getMessage());
+    }
+    @ExceptionHandler({PromptException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected void handlePromptException(PromptException ex) {
+        log.error("AI error, unable to process call: {}", ex.getMessage());
     }
 }
