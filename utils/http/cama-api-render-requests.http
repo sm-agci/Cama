@@ -33,7 +33,7 @@ x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
   "datacontenttype": "application/json",
   "data": {
     "device": {
-      "phoneNumber": "+33699901032"
+      "phoneNumber": "+33699901034"
     },
     "area": {
       "areaType": "CIRCLE",
@@ -50,8 +50,18 @@ x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
 
 
 ### GET notifications from mobile
-GET https://cama-api.onrender.com/api/v1/cama/notifications/33699901032/10
+GET https://cama-api.onrender.com/api/v1/cama/notifications/33699901034/10
 Accept: application/json
 Content-Type: application/json
 x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f199
 
+### POST create task from mobile
+POST https://cama-api.onrender.com/api/v1/cama/tasks
+Accept: application/json
+Content-Type: application/json
+x-correlator: cfb2f91a-f946-4141-94c2-82a33bb2f188
+
+{
+  "phoneNumber" : "+33699901034",
+  "command": "When i will come near Eiffel Tower remind me about buying gift for kids friend birthday party."
+}
