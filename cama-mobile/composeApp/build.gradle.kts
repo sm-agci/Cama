@@ -12,7 +12,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -48,6 +47,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.bundles.ktor)
             implementation(libs.decompose)
+            implementation(libs.decompose.extensions.compose)
+            implementation(libs.decompose.corutines)
         }
 
         nativeMain.dependencies {
