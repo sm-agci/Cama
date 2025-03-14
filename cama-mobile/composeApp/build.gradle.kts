@@ -49,6 +49,9 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.extensions.compose)
             implementation(libs.decompose.corutines)
+
+            api(libs.datastore.preferences)
+            api(libs.datastore)
         }
 
         nativeMain.dependencies {

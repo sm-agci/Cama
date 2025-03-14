@@ -1,8 +1,13 @@
 package com.cieslak.cama.presentation.registration
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.cieslak.cama.model.RegistrationState
+import com.cieslak.cama.navigation.RootComponent.Companion.AUTH_KEY
 import com.cieslak.cama.networking.ApiClient
 import com.cieslak.cama.presentation.base.BaseComponent
 import com.cieslak.cama.utils.onError
@@ -14,6 +19,7 @@ import kotlinx.coroutines.launch
 class RegistrationComponent(
     componentContext: ComponentContext,
     private val client: ApiClient,
+    private val prefs: DataStore<Preferences>,
     private val onNavigateToToDo: () -> Unit,
 ) : BaseComponent<RegistrationEvent, RegistrationState>(), ComponentContext by componentContext {
 
@@ -37,6 +43,8 @@ class RegistrationComponent(
                 .onSuccess {
                     val auth = it.authenticationId.split("|").last()
                     val code = it.authenticationId.split("|").first()
+
+                    prefs.edit { dataStore -> dataStore[stringPreferencesKey(AUTH_KEY)] = auth }
                     modify { copy(auth = auth, code = code, isPhoneLoading = false) }
                 }
                 .onError {

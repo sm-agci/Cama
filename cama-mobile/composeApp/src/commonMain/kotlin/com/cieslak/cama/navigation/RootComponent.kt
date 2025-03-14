@@ -1,5 +1,8 @@
 package com.cieslak.cama.navigation
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -7,11 +10,15 @@ import com.arkivanov.decompose.router.stack.pushNew
 import com.cieslak.cama.networking.ApiClient
 import com.cieslak.cama.presentation.registration.RegistrationComponent
 import com.cieslak.cama.presentation.todo.ToDoMainComponent
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
 class RootComponent(
     componentContext: ComponentContext,
     private val client: ApiClient,
+    private val prefs: DataStore<Preferences>,
     private val onFinish: () -> Unit,
 ) : ComponentContext by componentContext {
 
@@ -19,7 +26,7 @@ class RootComponent(
     val childStack = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
-        initialConfiguration = Configuration.Registration,
+        initialConfiguration = if (isLogin()) Configuration.ToDoMain else Configuration.Registration,
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -33,6 +40,7 @@ class RootComponent(
                 RegistrationComponent(
                     componentContext = context,
                     client = client,
+                    prefs = prefs,
                     onNavigateToToDo = { navigation.pushNew(Configuration.ToDoMain) }
                 )
             )
@@ -43,6 +51,12 @@ class RootComponent(
                     onGoBack = { onFinish() }
                 )
             )
+        }
+    }
+
+    private fun isLogin(): Boolean {
+        return runBlocking {
+            prefs.data.map { it[stringPreferencesKey(AUTH_KEY)] != null }.first()
         }
     }
 
@@ -58,5 +72,9 @@ class RootComponent(
 
         @Serializable
         data object ToDoMain : Configuration()
+    }
+
+    companion object {
+        const val AUTH_KEY = "AUTH_KEY"
     }
 }
