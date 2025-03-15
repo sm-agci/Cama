@@ -12,7 +12,7 @@ import java.util.List;
 @Slf4j
 @Component
 @AllArgsConstructor
-class CamaApiNotificationService {
+public class CamaApiNotificationService {
 
     private final NotificationStorage storage;
 
@@ -38,7 +38,7 @@ class CamaApiNotificationService {
         return response;
     }
 
-    void storeNotification(LocationNotification notification, String xCorrelator) {
+    public void storeNotification(LocationNotification notification, String xCorrelator) {
         log.info("Saving notification:{} ", notification);
         storage.save(notification);
     }

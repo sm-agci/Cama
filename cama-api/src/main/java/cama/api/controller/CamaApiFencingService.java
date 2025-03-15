@@ -6,11 +6,16 @@ import cama.api.config.CamaFencingConfig;
 import cama.api.generate.dto.*;
 import cama.api.mappers.SubscriptionRequestMapper;
 import cama.api.mappers.TaskResponseMapper;
+import cama.api.notification.CamaApiNotificationService;
+import cama.api.scheduler.NotificationTask;
 import cama.api.webclient.OplSandboxGeofencingClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +29,8 @@ class CamaApiFencingService {
     private final AiCommandParser commandParser;
     private final SubscriptionRequestMapper subscriptionRequestMapper;
     private final TaskResponseMapper taskResponseMapper;
+    private final CamaApiNotificationService notificationService;
+    private final ThreadPoolTaskScheduler taskScheduler;
 
     TaskResponse createTask(Task task, String xCorrelator) {
         Command command = commandParser.parse(task);
@@ -37,6 +44,12 @@ class CamaApiFencingService {
         log.info("Subscription response: {}, task: {}", response, task);
         TaskResponse taskResponse= taskResponseMapper.mapToTaskResponse(command, task, response);
         taskStorage.save(task.getPhoneNumber(), taskResponse);
+
+        taskScheduler.scheduleWithFixedDelay(
+                new NotificationTask(notificationService, response,xCorrelator),
+                Duration.ofSeconds(15)
+        );
+
         return taskResponse;
     }
     void deleteTask(String taskId, String xCorrelator) {
